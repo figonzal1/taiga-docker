@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ../kompose convert
+    kompose.version: 1.32.0 (765fde254)
+  labels:
+    io.kompose.service: taiga-events
+  name: taiga-events
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: taiga-events
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ../kompose convert
+        kompose.version: 1.32.0 (765fde254)
+      labels:
+        io.kompose.network/taiga-docker-taiga: "true"
+        io.kompose.service: taiga-events
+    spec:
+      containers:
+        - env:
+            - name: RABBITMQ_PASS
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: RABBITMQ_PASS
+            - name: RABBITMQ_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: RABBITMQ_USER
+            - name: TAIGA_SECRET_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: SECRET_KEY
+          image: taigaio/taiga-events:latest
+          name: taiga-events
+      restartPolicy: Always

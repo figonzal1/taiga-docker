@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ../kompose convert
+    kompose.version: 1.32.0 (765fde254)
+  labels:
+    io.kompose.service: taiga-front
+  name: taiga-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: taiga-front
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ../kompose convert
+        kompose.version: 1.32.0 (765fde254)
+      labels:
+        io.kompose.network/taiga-docker-taiga: "true"
+        io.kompose.service: taiga-front
+    spec:
+      containers:
+        - env:
+            - name: TAIGA_SCHEME
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: TAIGA_SCHEME
+            - name: WEBSOCKETS_SCHEME
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: WEBSOCKETS_SCHEME
+            - name: TAIGA_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: TAIGA_DOMAIN
+            - name: TAIGA_URL
+              value: $(TAIGA_SCHEME)://$(TAIGA_DOMAIN)
+            - name: TAIGA_WEBSOCKETS_URL
+              value: $(WEBSOCKETS_SCHEME)://$(TAIGA_DOMAIN)
+            - name: PUBLIC_REGISTER_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: REGISTER_ENABLED_FRONT
+          image: taigaio/taiga-front:latest
+          name: taiga-front
+      restartPolicy: Always

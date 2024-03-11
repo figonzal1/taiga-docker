@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ../kompose convert
+    kompose.version: 1.32.0 (765fde254)
+  labels:
+    io.kompose.service: taiga-back
+  name: taiga-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: taiga-back
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ../kompose convert
+        kompose.version: 1.32.0 (765fde254)
+      labels:
+        io.kompose.network/taiga-docker-taiga: "true"
+        io.kompose.service: taiga-back
+    spec:
+      containers:
+        - env:
+            - name: DEFAULT_FROM_EMAIL
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: EMAIL_DEFAULT_FROM
+            - name: EMAIL_BACKEND
+              value: django.core.mail.backends..EmailBackend
+            - name: EMAIL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: EMAIL_HOST
+            - name: EMAIL_HOST_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: EMAIL_HOST_PASSWORD
+            - name: EMAIL_HOST_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: EMAIL_HOST_USER
+            - name: EMAIL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: EMAIL_PORT
+            - name: EMAIL_USE_SSL
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: EMAIL_USE_SSL
+            - name: EMAIL_USE_TLS
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: EMAIL_USE_TLS
+            - name: ENABLE_TELEMETRY
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: ENABLE_TELEMETRY
+            - name: POSTGRES_DB
+              value: taiga
+            - name: POSTGRES_HOST
+              value: taiga-db
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: POSTGRES_USER
+            - name: RABBITMQ_PASS
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: RABBITMQ_PASS
+            - name: RABBITMQ_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: RABBITMQ_USER
+            - name: TAIGA_SECRET_KEY
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: SECRET_KEY
+            - name: TAIGA_SITES_DOMAIN
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: TAIGA_DOMAIN
+            - name: TAIGA_SITES_SCHEME
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: TAIGA_SCHEME
+            - name: TAIGA_SUBPATH
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: SUBPATH
+            - name: PUBLIC_REGISTER_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: REGISTER_ENABLED_BACK
+          image: taigaio/taiga-back:latest
+          name: taiga-back
+          volumeMounts:
+            - mountPath: /taiga-back/static
+              name: taiga-static-data
+            - mountPath: /taiga-back/media
+              name: taiga-media-data
+      restartPolicy: Always
+      volumes:
+        - name: taiga-static-data
+          persistentVolumeClaim:
+            claimName: taiga-static-data
+        - name: taiga-media-data
+          persistentVolumeClaim:
+            claimName: taiga-media-data
