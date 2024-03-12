@@ -116,6 +116,16 @@ spec:
                 configMapKeyRef:
                   name: taiga-config
                   key: REGISTER_ENABLED_BACK
+            - name: SESSION_COOKIE_SECURE
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: SESSION_COOKIE_SECURE
+            - name: CSRF_COOKIE_SECURE
+              valueFrom:
+                configMapKeyRef:
+                  name: taiga-config
+                  key: CSRF_COOKIE_SECURE
           image: taigaio/taiga-back:latest
           name: taiga-back
           volumeMounts:
