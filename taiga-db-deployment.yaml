@@ -41,7 +41,9 @@ spec:
           livenessProbe:
             exec:
               command:
-                - 'pg_isready -U '
+              - sh
+              - -c
+              - pg_isready -U $POSTGRES_USER
             failureThreshold: 5
             initialDelaySeconds: 3
             periodSeconds: 2
