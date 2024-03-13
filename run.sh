@@ -6,8 +6,8 @@ microk8s kubectl create configmap taiga-config --from-env-file=.env -n taiga
 
 #DB
 microk8s kubectl apply -f -n taiga /taiga-k8s/taiga-db-data-persistentvolumeclaim.yaml
-microk8s kubectl apply -f -n taiga /taiga-k8s/taiga-db-deployment
-microk8s kubectl apply -f -n taiga /taiga-k8s/taiga-db-service
+microk8s kubectl apply -f -n taiga /taiga-k8s/taiga-db-deployment.yaml
+microk8s kubectl apply -f -n taiga /taiga-k8s/taiga-db-service.yaml
 
 # RABBIT MQ EVENTS
 microk8s kubectl apply -f -n taiga /taiga-k8s/taiga-events-rabbitmq-data-persistentvolumeclaim.yaml
