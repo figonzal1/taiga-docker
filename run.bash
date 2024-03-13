@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Taiga Config MAP
+microk8s kubectl create namespace taiga
 microk8s kubectl create configmap taiga-config --from-env-file=.env -n taiga
 
 #DB
