@@ -33,7 +33,7 @@ spec:
                   name: taiga-config
                   key: EMAIL_DEFAULT_FROM
             - name: EMAIL_BACKEND
-              value: django.core.mail.backends..EmailBackend
+              value: django.core.mail.backends.console.EmailBackend
             - name: EMAIL_HOST
               valueFrom:
                 configMapKeyRef:
