@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: taiga-back
+  namespace: taiga
 spec:
   selector:
     io.kompose.service: taiga-back

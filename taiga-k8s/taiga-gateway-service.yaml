@@ -7,6 +7,7 @@ metadata:
   labels:
     io.kompose.service: taiga-gateway
   name: taiga-gateway
+  namespace: taiga
 spec:
   ports:
     - name: "9000"
